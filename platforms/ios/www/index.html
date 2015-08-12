@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+ -->
+<html>
+    <head>
+        <!--
+         Customize this policy to fit your own app's needs. For more guidance, see:
+         https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+         Some notes:
+         * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+         * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+         * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+         * Enable inline JS: add 'unsafe-inline' to default-src
+         -->
+        <!--        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">-->
+        <meta name="format-detection" content="telephone=no">
+            <meta name="msapplication-tap-highlight" content="no">
+                <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+                    <link rel="stylesheet" type="text/css" href="css/index.css">
+                        <title>Hello World</title>
+                        <script type="text/javascript" src="cordova.js"></script>
+                        
+                        <script type="text/javascript">
+                            var conn = null;
+                            document.addEventListener('deviceready', onDeviceReady, false);
+                            function onDeviceReady(){
+                                setDBConn();
+                            }
+                        
+                        function insertData1(i) {
+                            //loadJSFile("plugins/io.litehelpers.cordova.sqlite/www/SQLitePlugin.js");
+                            var name = "Nishad";
+                            var address = "RMR";
+                            var empid = "3908";
+                            var email = "a@a.com";
+                            
+                            var query = "INSERT INTO DummyTable (empid, name, address, email) values('1001','Ccnn','Ecity','n@n.com')";
+                            insert(conn, query);
+                            query = null;
+                        }
+                        
+                        function insertDataMultiple(i) {
+                            
+                            var query = "INSERT INTO DummyTable "
+                            query+= "SELECT 'data1' AS 'empid', 'data2' AS 'name', 'data3' AS 'address', 'data4' AS 'email' "
+                            
+                            for (var x = 0; x < i; x++) {
+                                query+= "UNION SELECT '" + x + "','" + name + "_" + x + "','" + address + "_" + x + "','" + email + "_" + x + "' ";
+                            }
+                            insert(conn, query);
+                            query = null;
+                        }
+                        
+                        
+                        function selectData(i) {
+                            var name = "Nishad";
+                            var address = "RMR";
+                            var empid = "3908";
+                            var email = "a@a.com";
+                            var query = "select empid from DummyTable";
+                            
+                            conn.executeSql(query, [], function (res) {
+                                            var len = res.rows.length;
+                                            //alert(len);
+                                            for(var x=0;x<len;x++){
+                                            var empid = res.rows.item(x).empid;
+                                            //alert(empid);
+                                            //alert(JSON.stringify(res.rows.item(x)));
+                                            
+                                            //alert(empid);
+                                            }
+                                            
+                                            //console.log('got stringlength: ' + stringlength);
+                                            });
+                                            
+                                            
+                                            //insert(conn, query);
+                                            query = null;
+                        }
+                        
+                        function selectDataLoop(i) {
+                            
+                            //alert('A');
+                            var query = "select empid from DummyTable where empid=1";
+                            
+                            for(var x=0;x<i;x++){
+                                conn.executeSql(query, [], function (res) {
+                                                var len = res.rows.length;
+                                                //alert(len);
+                                                for(var x=0;x<len;x++){
+                                                var empid = res.rows.item(x).empid;
+                                                //alert(empid);
+                                                //alert(JSON.stringify(res.rows.item(x)));
+                                                
+                                                //alert(empid);
+                                                }
+                                                
+                                                //console.log('got stringlength: ' + stringlength);
+                                                });
+                                                
+                            }
+                            //insert(conn, query);
+                            query = null;
+                        }
+                        
+                        function insertDataLoop(i) {
+                            for(var x=0;x<i;x++){
+                                var insertQuery = "INSERT INTO DummyTable (empid, name, address, email) values('1001','Ccnn','Ecity','n@n.com')";
+                                insert(conn, insertQuery);
+                            }
+                        }
+                        
+                        function updateDataLoop(i) {
+                            for(var x=0;x<i;x++){
+                                var updateQuery = "update DummyTable set name='CCNN' where empid = '4' ";
+                                conn.executeSql(updateQuery, [], function(e){JSON.stringify(e);}, function(e){JSON.stringify(e)});
+                            }
+                            
+                        }
+                        
+                        function deleteData(i) {
+                            var deleteQuery = "DELETE FROM DummyTable where empid = '8'";
+                            insert(conn, deleteQuery);
+                        }
+                        
+                        function deleteDataLoop(i) {
+                            for(var x=0;x<i;x++){
+                                var deleteQuery = "DELETE FROM DummyTable where empid = '8'";
+                                insert(conn, deleteQuery);
+                            }
+                        }
+                        
+                        
+                        function selectInsertUpdateDataMultiple(i) {
+                            var name = "Nishad";
+                            var address = "RMR";
+                            var empid = "3908";
+                            var email = "a@a.com";
+                            
+                            var query = "select empid from DummyTable";
+                            
+                            conn.executeSql(query, [], function (res) {
+                                            var len = res.rows.length;
+                                            //alert(len);
+                                            for(var x=0;x<len;x++){
+                                            //var empid = res.rows.item(x).empid;
+                                            //alert(JSON.stringify(res.rows.item(x)));
+                                            
+                                            //alert(empid);
+                                            }
+                                            
+                                            //console.log('got stringlength: ' + stringlength);
+                                            });
+                                            
+                                            try{
+                                                
+                                                //if(empid == '4'){
+                                                // alert(empid);
+                                                var updateQuery = "update DummyTable set name='CCNN' ";
+                                                conn.executeSql(updateQuery, [], function(e){JSON.stringify(e);}, function(e){JSON.stringify(e)});
+                                                //query = null;
+                                                
+                                                //}
+                                                // else{
+                                                insertDataMultiple(i);
+                                                
+                                                var deleteQuery = "DELETE FROM DummyTable where empid = '8'";
+                                                insert(conn, deleteQuery);
+                                                
+                                                //}
+                                            }catch(e){
+                                                alert(e);
+                                            }
+                                            
+                                            
+                                            //insert(conn, query);
+                                            query = null;
+                                            
+                        }
+                        
+                        function selectDataMultiple(i) {
+                            
+                            
+                            for(var x=0;x<i;x++){
+                                var query = "select empid from DummyTable";
+                                
+                                conn.executeSql(query, [], function (res) {
+                                                var len = res.rows.length;
+                                                //alert(len);
+                                                for(var x=0;x<len;x++){
+                                                
+                                                }
+                                                });
+                                                query = null;
+                            }
+                            
+                        }
+                        /*
+                         function insertDataMultiple(i) {
+                         insertDataMultiple(i);
+                         
+                         }
+                         */
+                        
+                        function updateDataMultiple(i) {
+                            
+                            var updateQuery = "update DummyTable set name= ";
+                            updateQuery+= "CASE empid ";
+                            for(var x=0;x<i;x++){
+                                updateQuery+= "WHEN 100 THEN 'CCNN' ";
+                            }
+                            updateQuery+= "END";
+                            //alert(updateQuery);
+                            conn.executeSql(updateQuery, [], function(e){JSON.stringify(e);}, function(e){JSON.stringify(e)});
+                        }
+                        
+                        function deleteDataMultiple(i) {
+                            for(var x=0;x<i;x++){
+                                var deleteQuery = "DELETE FROM DummyTable where empid = '8'";
+                                insert(conn, deleteQuery);
+                            }
+                        }
+                        
+                        function selectInsertUpdateDataMultipleInLoop(i, loop) {
+                            var name = "Nishad";
+                            var address = "RMR";
+                            var empid = "3908";
+                            var email = "a@a.com";
+                            
+                            var query = "select empid from DummyTable";
+                            
+                            for(var i=0;i<loop;i++){
+                                conn.executeSql(query, [], function (res) {
+                                                var len = res.rows.length;
+                                                //alert(len);
+                                                for(var x=0;x<len;x++){
+                                                //var empid = res.rows.item(x).empid;
+                                                //alert(JSON.stringify(res.rows.item(x)));
+                                                
+                                                //alert(empid);
+                                                }
+                                                
+                                                //console.log('got stringlength: ' + stringlength);
+                                                });
+                                                
+                                                try{
+                                                    
+                                                    //if(empid == '4'){
+                                                    // alert(empid);
+                                                    var updateQuery = "update DummyTable set name='CCNN' ";
+                                                    conn.executeSql(updateQuery, [], function(e){JSON.stringify(e);}, function(e){JSON.stringify(e)});
+                                                    //query = null;
+                                                    
+                                                    //}
+                                                    // else{
+                                                    insertDataMultiple(i);
+                                                    
+                                                    var deleteQuery = "DELETE FROM DummyTable where empid = '8'";
+                                                    insert(conn, deleteQuery);
+                                                    
+                                                    //}
+                                                }catch(e){
+                                                    alert(e);
+                                                }
+                                                
+                                                
+                                                //insert(conn, query);
+                            }
+                            query = null;
+                            
+                        }
+                        
+                        
+                        function insertUpdateDataMultipleInLoop(i, loop) {
+                            var name = "Nishad";
+                            var address = "RMR";
+                            var empid = "3908";
+                            var email = "a@a.com";
+                            
+                            var query = "select empid from DummyTable";
+                            
+                            for(var i=0;i<loop;i++){
+                                
+                                
+                                insertDataMultiple(i);
+                                
+                                
+                            }
+                            
+                            
+                        }
+                        
+                        function updateDataMultipleInLoop(loop) {
+                            
+                            for(var i=0;i<loop;i++){
+                                var updateQuery = "update DummyTable set name= ";
+                                updateQuery+= "CASE empid ";
+                                for(var x=0;x<i;x++){
+                                    updateQuery+= "WHEN 100 THEN 'CCNN' ";
+                                }
+                                updateQuery+= "END";
+                                //alert(updateQuery);
+                                conn.executeSql(updateQuery, [], function(e){JSON.stringify(e)}, function(e){JSON.stringify(e)});
+                            }
+                        }
+                        
+                        function deleteDataMultipleInLoop(loop) {
+                            
+                            
+                            for(var i=0;i<loop;i++){
+                                
+                                
+                                var deleteQuery = "DELETE FROM DummyTable where empid = '8'";
+                                insert(conn, deleteQuery);
+                                
+                            }
+                            query = null;
+                            
+                        }
+                        
+                        function insertDataMultipleLoop(i) {
+                            var name = "Nishad";
+                            var address = "RMR";
+                            var empid = "3908";
+                            var email = "a@a.com";
+                            
+                            var query = "INSERT INTO DummyTable "
+                            query+= "SELECT 'data1' AS 'empid', 'data2' AS 'name', 'data3' AS 'address', 'data4' AS 'email' "
+                            
+                            for (var x = 0; x < i; x++) {
+                                query+= "UNION SELECT '" + empid + "_" + x + "','" + name + "_" + x + "','" + address + "_" + x + "','" + email + "_" + x + "' ";
+                            }
+                            for(var x=0;x<i;x++){
+                                insert(conn, query);
+                            }
+                            query = null;
+                        }
+                        
+                        
+                        function removePlugIn(){
+                            removeJSFile("plugins/io.litehelpers.cordova.sqlite/www/SQLitePlugin.js");
+                            location.reload();
+                        }
+                        
+                        
+                        function getDbConn(dbName) {
+                            // open the db
+                            var dbconnection = window.sqlitePlugin.openDatabase({
+                                                                                name: dbName, location: 1
+                                                                                });
+                                                                                //alert(JSON.stringify(dbconnection));
+                                                                                return dbconnection;
+                        }
+                        
+                        function createTable(dbConn, tableName, columns) {
+                            
+                            // table creation
+                            query = "CREATE TABLE IF NOT EXISTS " + tableName + " (" + columns + ")";
+                            try {
+                                dbConn.executeSql(query, '', function() {
+                                                  //alert('success')
+                                                  }, function() {
+                                                  //alert('error')
+                                                  });
+                            } catch (e) {
+                                //alert(e);
+                            }
+                        }
+                        
+                        function insert(dbConn, query) {
+                            dbConn.executeSql(query, '', function() {
+                                              //alert('success')
+                                              }, function(e) {
+                                              //alert('error :' + JSON.stringify(e))
+                                              });
+                        }
+                        
+                        function select(dbConn, query) {
+                            dbConn.executeSql(query, '', function() {
+                                              //alert('success')
+                                              }, function(e) {
+                                              //alert('error :' + JSON.stringify(e))
+                                              });
+                        }
+                        
+                        function deleteConn(){
+                            // var dbconn = getDbConn('MyDb');
+                            alert('delete');
+                            var result = delete conn;
+                            alert('deleted conn - '+ result);
+                        }
+                        
+                        function setDBConn(){
+                            conn = getDbConn('MyDb');
+                            createTable(conn, 'DummyTable', 'empid,name,address,email');
+                        }
+                        
+                            </script>
+                        <title>Hello World</title>
+                        </head>
+    <body>
+        <div class="app">
+            <BR><BR><BR><BR>
+            <button onClick="selectData()">Select Single Rec</button>
+            <BR><BR><BR><BR>
+            <button onClick="insertData1(0)">Insert Single Rec</button>
+            <BR><BR><BR><BR>
+            <button onClick="updateData(0)">Update Single Rec</button>
+            <BR><BR><BR><BR>
+            <button onClick="deleteData(0)">Delete Single Rec</button>
+            <BR><BR><BR><BR>
+            
+            <button onClick="selectDataLoop(10)">Select Single Rec Loop 10</button>
+            <BR><BR><BR><BR>
+            <button onClick="insertDataLoop(10)">Insert Single Rec Loop 10</button>
+            <BR><BR><BR><BR>
+            <button onClick="updateDataLoop(10)">Update Single Rec Loop 10</button>
+            <BR><BR><BR><BR>
+            <button onClick="deleteDataLoop(10)">Delete Single Rec Loop 10</button>
+            <BR><BR><BR><BR>
+            
+            
+            <button onClick="selectDataLoop(100)">Select Single Rec Loop 100</button>
+            <BR><BR><BR><BR>
+            <button onClick="insertDataLoop(100)">Insert Single Rec Loop 100</button>
+            <BR><BR><BR><BR>
+            <button onClick="updateDataLoop(100)">Update Single Rec Loop 100</button>
+            <BR><BR><BR><BR>
+            <button onClick="deleteDataLoop(100)">Delete Single Rec Loop 100</button>
+            <BR><BR><BR><BR>
+            
+            <!--
+             <button onClick="selectDataMultiple(10)">Select Data Bulk 10</button>
+             <BR><BR><BR><BR>
+             -->
+            <button onClick="insertDataMultiple(10)">Insert Data Bulk 10</button>
+            <BR><BR><BR><BR>
+            <button onClick="updateDataMultiple(10)">Update Data Bulk 10</button>
+            <BR><BR><BR><BR>
+            <button onClick="deleteDataMultiple(10)">Delete Data Bulk 10</button>
+            <BR><BR><BR><BR>
+            
+            <!--
+             <button onClick="selectDataMultiple(100)">Select Data Bulk 100</button>
+             <BR><BR><BR><BR>
+             -->
+            
+            <button onClick="insertDataMultiple(100)">Insert Data Bulk 100</button>
+            <BR><BR><BR><BR>
+            <button onClick="updateDataMultiple(100)">Update Data Bulk 100</button>
+            <BR><BR><BR><BR>
+            <button onClick="deleteDataMultiple(100)">Delete Data Bulk 100</button>
+            <BR><BR><BR><BR>
+            
+            
+            
+            <button onClick="insertDataMultipleLoop(10)">Insert Data Bulk 10 Loop</button>
+            <BR><BR><BR><BR>
+            <button onClick="updateDataMultipleInLoop(10)">Update Data Bulk 10 Loop</button>
+            <BR><BR><BR><BR>
+            <button onClick="deleteDataMultipleInLoop(10)">Delete Data Bulk 10 Loop</button>
+            <BR><BR><BR><BR>
+            
+            
+            
+            <button onClick="insertDataMultipleLoop(100)">Insert Data Bulk 100 Loop</button>
+            <BR><BR><BR><BR>
+            <button onClick="updateDataMultipleInLoop(100)">Update Data Bulk 100 Loop</button>
+            <BR><BR><BR><BR>
+            <button onClick="deleteDataMultipleInLoop(100)">Delete Data Bulk 100 Loop</button>
+            <BR><BR><BR><BR>
+            
+            
+            
+            <!--
+             <button onClick="selectInsertUpdateDataMultipleInLoop(10, 10)">Insert Data Bulk In Loop 10</button>
+             <BR><BR><BR><BR>
+             <button onClick="selectInsertUpdateDataMultipleInLoop(100, 100)">Insert Data Bulk In Loop 100</button>
+             <BR><BR><BR><BR>
+             -->
+            
+            
+            
+            
+            
+            
+            <button onClick="insertData(300)">Insert 300</button>
+            <BR><BR><BR><BR>
+            
+            
+            
+            <!--
+             <button onClick="insertData(2)">Insert 10</button>
+             <BR><BR><BR><BR>
+             
+             <button onClick="insertData(10)">Insert 10</button>
+             <BR><BR><BR><BR>
+             <button onClick="insertData(50)">Insert 50</button>
+             <BR><BR><BR><BR>
+             <button onClick="insertData(100)">Insert 100</button>
+             <BR><BR><BR><BR>
+             <button onClick="insertData(300)">Insert 300</button>
+             <BR><BR><BR><BR>
+             <button onClick="insertData(500)">Insert 500</button>
+             <BR><BR><BR><BR>
+             <button onClick="insertData(1000)">Insert 1000</button>
+             <BR><BR><BR><BR>
+             -->
+            
+            <!--
+             <button onClick="deleteConn()">delete obj</button>
+             <BR><BR><BR><BR>
+             -->
+        </div>
+        
+    </body>
+</html>
