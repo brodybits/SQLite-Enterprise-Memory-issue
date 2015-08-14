@@ -65,6 +65,7 @@
                             }
                             insert(conn, query);
                             query = null;
+                            getTotalRecords();
                         }
                         
                         
@@ -116,6 +117,7 @@
                                                 
                             }
                             //insert(conn, query);
+                            //getTotalRecords();
                             query = null;
                         }
                         
@@ -124,6 +126,7 @@
                                 var insertQuery = "INSERT INTO DummyTable (empid, name, address, email) values('1001','Ccnn','Ecity','n@n.com')";
                                 insert(conn, insertQuery);
                             }
+                            getTotalRecords();
                         }
                         
                         function updateDataLoop(i) {
@@ -131,7 +134,7 @@
                                 var updateQuery = "update DummyTable set name='CCNN' where empid = '4' ";
                                 conn.executeSql(updateQuery, [], function(e){JSON.stringify(e);}, function(e){JSON.stringify(e)});
                             }
-                            
+                            getTotalRecords();
                         }
                         
                         function deleteData(i) {
@@ -144,6 +147,7 @@
                                 var deleteQuery = "DELETE FROM DummyTable where empid = '8'";
                                 insert(conn, deleteQuery);
                             }
+                            getTotalRecords();
                         }
                         
                         
@@ -209,7 +213,7 @@
                                                 });
                                                 query = null;
                             }
-                            
+                            getTotalRecords();
                         }
                         /*
                          function insertDataMultiple(i) {
@@ -228,6 +232,7 @@
                             updateQuery+= "END";
                             //alert(updateQuery);
                             conn.executeSql(updateQuery, [], function(e){JSON.stringify(e);}, function(e){JSON.stringify(e)});
+                            getTotalRecords();
                         }
                         
                         function deleteDataMultiple(i) {
@@ -235,6 +240,7 @@
                                 var deleteQuery = "DELETE FROM DummyTable where empid = '8'";
                                 insert(conn, deleteQuery);
                             }
+                            getTotalRecords();
                         }
                         
                         function selectInsertUpdateDataMultipleInLoop(i, loop) {
@@ -384,8 +390,8 @@
                         }
                         
                         function insert(dbConn, query) {
-                            dbConn.executeSql(query, '', function() {
-                                              //alert('success')
+                            dbConn.executeSql(query, '', function(res) {
+                                              //alert(res)
                                               }, function(e) {
                                               //alert('error :' + JSON.stringify(e))
                                               });
@@ -411,81 +417,101 @@
                             createTable(conn, 'DummyTable', 'empid,name,address,email');
                         }
                         
+                        function getTotalRecords(){
+                            var query = "select count(*) as count from DummyTable";
+                            var tr;
+                            conn.executeSql(query, [], function (res) {
+                               tr = res.rows.item(0).count;
+                               document.getElementById("total_records").value = tr;
+                            });
+                        }
+                        
                             </script>
                         <title>Hello World</title>
                         </head>
     <body>
         <div class="app">
             <BR><BR><BR><BR>
-            <button onClick="selectData()">Select Single Rec</button>
+            <input type="text" id="total_records">
+<!--            <button onClick="selectData(0)">Select Single Rec</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="insertData1(0)">Insert Single Rec</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="updateData(0)">Update Single Rec</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="deleteData(0)">Delete Single Rec</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            -->
+<!--            <button onClick="selectDataLoop(10)">Select Single Rec Loop 10</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="insertDataLoop(10)">Insert Single Rec Loop 10</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="updateDataLoop(10)">Update Single Rec Loop 10</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="deleteDataLoop(10)">Delete Single Rec Loop 10</button>-->
+<!--            <BR><BR><BR><BR>-->
             <BR><BR><BR><BR>
-            <button onClick="insertData1(0)">Insert Single Rec</button>
+            <button onClick="insertDataLoop(2000)">Insert Single Rec Loop 2000</button>
             <BR><BR><BR><BR>
-            <button onClick="updateData(0)">Update Single Rec</button>
+            <button onClick="selectDataLoop(2000)">Select Single Rec Loop 2000</button>
             <BR><BR><BR><BR>
-            <button onClick="deleteData(0)">Delete Single Rec</button>
+            <button onClick="updateDataLoop(2000)">Update Single Rec Loop 2000</button>
+            <BR><BR><BR><BR>
+            <button onClick="deleteDataLoop(2000)">Delete Single Rec Loop 2000</button>
             <BR><BR><BR><BR>
             
-            <button onClick="selectDataLoop(10)">Select Single Rec Loop 10</button>
-            <BR><BR><BR><BR>
-            <button onClick="insertDataLoop(10)">Insert Single Rec Loop 10</button>
-            <BR><BR><BR><BR>
-            <button onClick="updateDataLoop(10)">Update Single Rec Loop 10</button>
-            <BR><BR><BR><BR>
-            <button onClick="deleteDataLoop(10)">Delete Single Rec Loop 10</button>
-            <BR><BR><BR><BR>
             
-            
-            <button onClick="selectDataLoop(100)">Select Single Rec Loop 100</button>
             <BR><BR><BR><BR>
-            <button onClick="insertDataLoop(100)">Insert Single Rec Loop 100</button>
+            <button onClick="insertDataLoop(5000)">Insert Single Rec Loop 5000</button>
             <BR><BR><BR><BR>
-            <button onClick="updateDataLoop(100)">Update Single Rec Loop 100</button>
+            <button onClick="selectDataLoop(5000)">Select Single Rec Loop 5000</button>
             <BR><BR><BR><BR>
-            <button onClick="deleteDataLoop(100)">Delete Single Rec Loop 100</button>
+            <button onClick="updateDataLoop(5000)">Update Single Rec Loop 5000</button>
+            <BR><BR><BR><BR>
+            <button onClick="deleteDataLoop(5000)">Delete Single Rec Loop 5000</button>
             <BR><BR><BR><BR>
             
             <!--
              <button onClick="selectDataMultiple(10)">Select Data Bulk 10</button>
              <BR><BR><BR><BR>
              -->
-            <button onClick="insertDataMultiple(10)">Insert Data Bulk 10</button>
-            <BR><BR><BR><BR>
-            <button onClick="updateDataMultiple(10)">Update Data Bulk 10</button>
-            <BR><BR><BR><BR>
-            <button onClick="deleteDataMultiple(10)">Delete Data Bulk 10</button>
-            <BR><BR><BR><BR>
-            
+<!--            <button onClick="insertDataMultiple(100)">Insert Data Bulk 100</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="updateDataMultiple(100)">Update Data Bulk 100</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="deleteDataMultiple(100)">Delete Data Bulk 100</button>-->
+<!--            <BR><BR><BR><BR>-->
+
             <!--
              <button onClick="selectDataMultiple(100)">Select Data Bulk 100</button>
              <BR><BR><BR><BR>
              -->
             
-            <button onClick="insertDataMultiple(100)">Insert Data Bulk 100</button>
-            <BR><BR><BR><BR>
-            <button onClick="updateDataMultiple(100)">Update Data Bulk 100</button>
-            <BR><BR><BR><BR>
-            <button onClick="deleteDataMultiple(100)">Delete Data Bulk 100</button>
-            <BR><BR><BR><BR>
+<!--            <button onClick="insertDataMultiple(1000)">Insert Data Bulk 1000</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="updateDataMultiple(1000)">Update Data Bulk 1000</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="deleteDataMultiple(1000)">Delete Data Bulk 1000</button>-->
+<!--            <BR><BR><BR><BR>-->
+
             
             
-            
-            <button onClick="insertDataMultipleLoop(10)">Insert Data Bulk 10 Loop</button>
-            <BR><BR><BR><BR>
-            <button onClick="updateDataMultipleInLoop(10)">Update Data Bulk 10 Loop</button>
-            <BR><BR><BR><BR>
-            <button onClick="deleteDataMultipleInLoop(10)">Delete Data Bulk 10 Loop</button>
-            <BR><BR><BR><BR>
-            
-            
-            
-            <button onClick="insertDataMultipleLoop(100)">Insert Data Bulk 100 Loop</button>
-            <BR><BR><BR><BR>
-            <button onClick="updateDataMultipleInLoop(100)">Update Data Bulk 100 Loop</button>
-            <BR><BR><BR><BR>
-            <button onClick="deleteDataMultipleInLoop(100)">Delete Data Bulk 100 Loop</button>
-            <BR><BR><BR><BR>
-            
+<!--            <button onClick="insertDataMultipleLoop(10)">Insert Data Bulk 10 Loop</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="updateDataMultipleInLoop(10)">Update Data Bulk 10 Loop</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="deleteDataMultipleInLoop(10)">Delete Data Bulk 10 Loop</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            -->
+<!--            -->
+<!--            -->
+<!--            <button onClick="insertDataMultipleLoop(100)">Insert Data Bulk 100 Loop</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="updateDataMultipleInLoop(100)">Update Data Bulk 100 Loop</button>-->
+<!--            <BR><BR><BR><BR>-->
+<!--            <button onClick="deleteDataMultipleInLoop(100)">Delete Data Bulk 100 Loop</button>-->
+<!--            <BR><BR><BR><BR>-->
+
             
             
             <!--
@@ -500,9 +526,9 @@
             
             
             
-            <button onClick="insertData(300)">Insert 300</button>
-            <BR><BR><BR><BR>
-            
+<!--            <button onClick="insertData(300)">Insert 300</button>-->
+<!--            <BR><BR><BR><BR>-->
+
             
             
             <!--
